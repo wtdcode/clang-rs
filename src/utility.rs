@@ -267,13 +267,13 @@ pub fn from_string<S: AsRef<str>>(string: S) -> CString {
 
 pub unsafe fn to_string(clang: CXString) -> String {
         let c = CStr::from_ptr(clang_getCString(clang));
-        let rust = c.to_str().expect("invalid Rust string").into();
+        let rust = c.to_string_lossy().into();
         clang_disposeString(clang);
         rust
 }
 
 pub fn to_string_option(clang: CXString) -> Option<String> {
-    clang.map(to_string).and_then(|s| {
+    clang.map(|cxs| unsafe { to_string(cxs) }).and_then(|s| {
         if !s.is_empty() {
             Some(s)
         } else {
