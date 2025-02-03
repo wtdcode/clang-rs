@@ -20,6 +20,9 @@
 
 extern crate clang_sys;
 extern crate libc;
+extern crate num_derive;
+extern crate num_traits;
+extern crate serde;
 
 #[macro_use]
 mod utility;
@@ -52,6 +55,9 @@ use libc::{c_int, c_uint, c_ulong};
 use completion::{Completer, CompletionString};
 use diagnostic::{Diagnostic};
 use documentation::{Comment};
+use num_derive::FromPrimitive;
+use serde::Deserialize;
+use serde::Serialize;
 use source::{File, Module, SourceLocation, SourceRange};
 use token::{Token};
 use utility::{FromError, Nullable};
@@ -1199,7 +1205,7 @@ impl TlsKind {
 // TypeKind ______________________________________
 
 /// Indicates the categorization of a type.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, FromPrimitive)]
 #[repr(C)]
 pub enum TypeKind {
     /// A type whose specific kind is not exposed via this interface.
